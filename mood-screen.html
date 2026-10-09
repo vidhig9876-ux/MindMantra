@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Check-in | MindMantra</title>
+<link rel="icon" href="assets/logo.svg">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css"></head><body data-page="mood">
+<header><div class="wrap">
+<a class="brand" href="index.html"><img src="assets/logo.svg" alt=""><span><b>MindMantra</b><small>MENTAL HEALTH CHECK-IN</small></span></a>
+<nav aria-label="Main"><a href="home.html" class="">Home</a><a href="mood-screen.html" class="on">Check-in</a><a href="emergency-sos.html" class="">Calm Down</a><a href="voice-vent.html" class="">Voice Vent</a><a href="campus-pulse.html" class="">Campus Pulse</a></nav>
+</div></header>
+<main>
+<div class="page-title"><div class="wrap"><h1>What do you need right now?</h1><p>There are no right answers. Pick whatever feels closest.</p></div></div>
+<section><div class="wrap">
+<div class="choices" role="group" aria-label="Check-in options">
+<button class="choice" aria-pressed="false" data-msg="That sounds like a lot to hold. Let's give your thoughts somewhere to go." data-prompt="What is the loudest thought right now? Write it down and let it be there." data-link="emergency-sos.html#release" data-label="Release my thoughts">My mind feels too full.</button>
+<button class="choice" aria-pressed="false" data-msg="Restlessness can be hard to sit with. A slow breath might help you settle." data-prompt="Where in your body do you feel the restlessness?" data-link="emergency-sos.html#breathe" data-label="Breathe with me">I feel restless.</button>
+<button class="choice" aria-pressed="false" data-msg="You have been carrying a lot. Resting counts as caring for yourself." data-prompt="What is one small thing that would feel kind right now?" data-link="emergency-sos.html#quiet" data-label="Take a quiet minute">I'm emotionally exhausted.</button>
+<button class="choice" aria-pressed="false" data-msg="You don't need a name for it yet. Noticing the present moment can help." data-prompt="What is one thing you can see around you right now?" data-link="emergency-sos.html#ground" data-label="Ground me">Something feels wrong, but I don't know what.</button>
+<button class="choice" aria-pressed="false" data-msg="Peace can be small. Here is a moment with nothing to do." data-prompt="What does peace feel like for you, even for a second?" data-link="emergency-sos.html#quiet" data-label="Take a quiet minute">I just need a little peace.</button>
+<button class="choice" aria-pressed="false" data-msg="Letting it out is brave. Say it however it comes." data-prompt="Say it out loud, or write it. No one is judging." data-link="voice-vent.html" data-label="Open Voice Vent">I want to let something out.</button>
+</div>
+<div class="row"><button class="btn" id="continueBtn" disabled>Continue</button></div>
+<div class="card lav" id="result" aria-live="polite"><h3 id="resultMsg"></h3><p id="resultPrompt"></p><a class="btn" id="resultLink" href="#">Next step</a><p class="note" style="margin-top:14px">A leaf was added to your Digital Greenhouse. Nothing here is a diagnosis.</p></div>
+</div></section></main>
+<footer><div class="wrap">MindMantra is a student prototype, not a substitute for professional care. If you feel unsafe, please reach out to someone you trust or a local helpline.<br>You don't have to be productive to deserve care.</div></footer>
+<script src="js/script.js"></script></body></html>

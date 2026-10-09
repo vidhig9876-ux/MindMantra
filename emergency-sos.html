@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Help Me Calm Down | MindMantra</title>
+<link rel="icon" href="assets/logo.svg">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css"></head><body data-page="calm">
+<header><div class="wrap">
+<a class="brand" href="index.html"><img src="assets/logo.svg" alt=""><span><b>MindMantra</b><small>MENTAL HEALTH CHECK-IN</small></span></a>
+<nav aria-label="Main"><a href="home.html" class="">Home</a><a href="mood-screen.html" class="">Check-in</a><a href="emergency-sos.html" class="on">Calm Down</a><a href="voice-vent.html" class="">Voice Vent</a><a href="campus-pulse.html" class="">Campus Pulse</a></nav>
+</div></header>
+<main>
+<div class="page-title"><div class="wrap"><h1>Help Me Calm Down</h1><p>Pick one. Go slowly. You can stop any time.</p></div></div>
+<section><div class="wrap">
+<div class="tabs" role="tablist">
+<button role="tab" data-tab="breathe">Breathe with Me</button><button role="tab" data-tab="ground">Ground Me</button><button role="tab" data-tab="release">Release My Thoughts</button><button role="tab" data-tab="quiet">Give Me a Quiet Minute</button></div>
+
+<div class="panel card" id="breathe"><h3>Breathe with Me</h3><p>Breathe in as the circle grows, and out as it shrinks.</p>
+<div class="circle-box"><div class="circle" id="circle"><span id="breathText">Ready</span></div><button class="btn" id="breathBtn">Start</button></div></div>
+
+<div class="panel card" id="ground"><h3>Ground Me: 5-4-3-2-1</h3><p>Tick each one as you notice it.</p><ul class="steps">
+<li><label><input type="checkbox"> 5 things you can see</label></li><li><label><input type="checkbox"> 4 things you can touch</label></li>
+<li><label><input type="checkbox"> 3 things you can hear</label></li><li><label><input type="checkbox"> 2 things you can smell</label></li>
+<li><label><input type="checkbox"> 1 thing you can taste, or one slow breath</label></li></ul></div>
+
+<div class="panel card" id="release"><h3>Release My Thoughts</h3><p>Write whatever is on your mind. It stays on this page and is never sent anywhere.</p>
+<textarea id="thoughts" aria-label="Your thoughts" placeholder="Start anywhere..."></textarea><div class="row"><button class="btn soft" id="clearBtn">Clear it all</button></div></div>
+
+<div class="panel card" id="quiet-panel"><h3>Give Me a Quiet Minute</h3><p>A distraction-free minute with a gentle timer.</p><button class="btn" id="quietBtn">Begin</button></div>
+</div></section></main>
+<div id="quiet" role="dialog" aria-label="Quiet minute"><p>Nothing to do. Nothing to fix.</p><div class="time" id="quietTime">60</div><p>Just be here for a moment.</p><button class="btn soft" id="quietEnd">End</button></div>
+<footer><div class="wrap">MindMantra is a student prototype, not a substitute for professional care. If you feel unsafe, please reach out to someone you trust or a local helpline.<br>You don't have to be productive to deserve care.</div></footer>
+<script src="js/script.js"></script></body></html>
