@@ -1,0 +1,46 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Admin - MindMantra</title><link rel="stylesheet" href="css/style.css"><style>html{visibility:hidden}</style>
+<script>setTimeout(function(){if(!window.__mmAuthOk)location.replace("index.html")},8000)</script></head>
+<body data-page="admin"><main class="app wide">
+<header class="top"><div><small>Admin dashboard</small><h1>Registered students</h1></div><div class="row"><a class="btn ghost" href="home.html" style="padding:8px 14px">Student app</a><button id="out" class="btn ghost" style="padding:8px 14px">Log out</button></div></header>
+<div id="denied" class="card center" hidden><h2>Not authorised</h2><p>This area is for MindMantra administrators only.</p><a class="btn" href="home.html" style="margin-top:12px">Go to the app</a></div>
+<div id="board" hidden style="display:none;gap:16px;flex-direction:column">
+<div class="stats"><div class="card center"><div class="big" id="sTotal">0</div><p>Total students</p></div><div class="card center"><div class="big" id="sToday">0</div><p>Registered today</p></div><div class="card center"><div class="big" id="sWeek">0</div><p>Last 7 days</p></div><div class="card center"><div class="big" id="sCol">0</div><p>Colleges</p></div></div>
+<section class="card"><h3 style="margin-bottom:10px">Registrations, last 7 days</h3><div class="bars" id="bars"></div></section>
+<section class="card"><div class="row" style="margin-bottom:10px"><h3 style="flex:0 0 auto">Student list</h3><label class="field" style="flex:1"><input id="q" type="search" placeholder="Search name, email, college or ID"></label></div>
+<div class="scroll"><table class="tbl"><thead><tr><th>Name</th><th>Email</th><th>College</th><th>Student ID</th><th>Registered</th></tr></thead><tbody id="rows"></tbody></table></div><p class="sub" id="count" style="margin-top:8px"></p></section></div>
+</main>
+<script src="js/script.js"></script>
+<script type="module">
+import { requireUser, logout } from "./js/auth.js";
+import { db, collection, getDocs, query, orderBy } from "./js/firebase-config.js";
+const $ = id => document.getElementById(id);
+$("out").onclick = () => logout().then(() => location.replace("index.html"));
+let all = [];
+try {
+  await requireUser({ admin: true });
+  window.__mmAuthOk = true; document.documentElement.style.visibility = "visible";
+  const snap = await getDocs(query(collection(db, "users"), orderBy("createdAt", "desc")));
+  all = snap.docs.map(d => { const x = d.data(); return { ...x, date: x.createdAt ? x.createdAt.toDate() : null }; });
+  $("board").style.display = "flex"; $("board").hidden = false; stats(); draw(all);
+} catch (e) {
+  window.__mmAuthOk = true; document.documentElement.style.visibility = "visible";
+  if (e.message !== "signed out") { $("denied").hidden = false;
+    if (!e.notAdmin) { $("denied").querySelector("h2").textContent = "Could not load students"; $("denied").querySelector("p").textContent = "Error: " + (e.code || e.message) + ". If this says permission-denied, deploy firestore.rules and log in again."; } }
+}
+function sameDay(a, b) { return a.toDateString() === b.toDateString(); }
+function stats() {
+  const now = new Date(), wk = new Date(now - 7 * 864e5);
+  $("sTotal").textContent = all.length; $("sToday").textContent = all.filter(s => s.date && sameDay(s.date, now)).length;
+  $("sWeek").textContent = all.filter(s => s.date && s.date >= wk).length; $("sCol").textContent = new Set(all.map(s => (s.college || "").toLowerCase())).size;
+  const days = [...Array(7)].map((_, i) => new Date(now - (6 - i) * 864e5)), counts = days.map(d => all.filter(s => s.date && sameDay(s.date, d)).length), max = Math.max(1, ...counts);
+  $("bars").innerHTML = ""; days.forEach((d, i) => { const c = document.createElement("div"), b = document.createElement("i"); b.style.height = (counts[i] / max * 90) + "px";
+    c.append(b, document.createTextNode(counts[i] + " | " + d.toLocaleDateString(undefined, { weekday: "short" }))); $("bars").appendChild(c); });
+}
+function draw(list) { // textContent only: user-entered text can never run as HTML
+  const t = $("rows"); t.innerHTML = "";
+  list.forEach(s => { const tr = document.createElement("tr");
+    [s.fullName, s.email, s.college, s.studentId || "-", s.date ? s.date.toLocaleString() : "-"].forEach(v => { const td = document.createElement("td"); td.textContent = v; tr.appendChild(td); }); t.appendChild(tr); });
+  $("count").textContent = "Showing " + list.length + " of " + all.length + " students";
+}
+$("q").oninput = () => { const k = $("q").value.toLowerCase().trim(); draw(all.filter(s => [s.fullName, s.email, s.college, s.studentId].join(" ").toLowerCase().includes(k))); };
+</script></body></html>

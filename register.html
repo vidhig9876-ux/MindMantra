@@ -1,0 +1,35 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Create account - MindMantra</title><link rel="stylesheet" href="css/style.css"></head>
+<body data-page="register"><main class="app">
+<section class="hero" style="padding-top:8px"><span class="logo"></span><h1>Create your account</h1><p class="sub">A gentle space, just for you.</p></section>
+<div id="msg" class="msg" hidden></div>
+<form id="f" class="card" style="display:grid;gap:12px" novalidate>
+<label class="field">Full name<input id="name" autocomplete="name" required></label>
+<label class="field">College email<input id="email" type="email" autocomplete="email" required></label>
+<label class="field">Student ID (optional)<input id="sid"></label>
+<label class="field">College name<input id="college" required></label>
+<label class="field">Password<span class="pw"><input id="pw" type="password" autocomplete="new-password" required><button type="button" class="eye">Show</button></span></label>
+<label class="field">Confirm password<span class="pw"><input id="pw2" type="password" autocomplete="new-password" required><button type="button" class="eye">Show</button></span></label>
+<button class="btn" id="go" type="submit">Create account</button></form>
+<p class="center sub" style="padding-bottom:20px">Already registered? <a href="index.html" style="color:var(--lavD);font-weight:700">Log in</a></p>
+</main>
+<script src="js/script.js"></script>
+<script type="module">
+import { configured } from "./js/firebase-config.js";
+import { registerStudent, friendly, onAuthStateChanged, auth } from "./js/auth.js";
+import { validateRegistration } from "./js/validate.js";
+const $ = id => document.getElementById(id), msg = $("msg");
+let busy = false;
+onAuthStateChanged(auth, u => { if (u && !busy && configured) location.replace("home.html"); });
+function show(list, ok) { msg.hidden = false; msg.className = "msg " + (ok ? "ok" : "err"); msg.innerHTML = ""; const ul = document.createElement("ul");
+  (Array.isArray(list) ? list : [list]).forEach(t => { const li = document.createElement("li"); li.textContent = t; ul.appendChild(li); }); msg.appendChild(ul); }
+if (!configured) show("Firebase is not configured yet. Paste your keys into js/firebase-config.js.");
+document.querySelectorAll(".eye").forEach(b => b.onclick = () => { const i = b.previousElementSibling, s = i.type === "password"; i.type = s ? "text" : "password"; b.textContent = s ? "Hide" : "Show"; });
+$("f").onsubmit = async e => {
+  e.preventDefault(); msg.hidden = true;
+  const f = { fullName: $("name").value, email: $("email").value, studentId: $("sid").value, college: $("college").value, password: $("pw").value, confirm: $("pw2").value };
+  const errs = validateRegistration(f); if (errs.length) return show(errs);
+  busy = true; $("go").disabled = true; $("go").textContent = "Creating account...";
+  try { await registerStudent(f); show("Account created! Taking you to MindMantra...", true); setTimeout(() => location.replace("home.html"), 900); }
+  catch (err) { busy = false; show(friendly(err)); $("go").disabled = false; $("go").textContent = "Create account"; }
+};
+</script></body></html>

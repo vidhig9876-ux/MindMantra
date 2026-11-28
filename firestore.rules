@@ -1,0 +1,23 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() { return request.auth != null; }
+    function isAdmin()  { return signedIn() && request.auth.token.admin == true; }
+
+    match /users/{uid} {
+      allow get:  if signedIn() && (request.auth.uid == uid || isAdmin());
+      allow list: if isAdmin();                       // only admins can list all students
+      allow create: if signedIn() && request.auth.uid == uid
+        && request.resource.data.keys().hasOnly(['uid','fullName','email','studentId','college','createdAt'])
+        && request.resource.data.keys().hasAll(['uid','fullName','email','studentId','college','createdAt'])
+        && request.resource.data.uid == uid
+        && request.resource.data.email == request.auth.token.email
+        && request.resource.data.fullName is string && request.resource.data.fullName.size() >= 2 && request.resource.data.fullName.size() <= 80
+        && request.resource.data.college is string && request.resource.data.college.size() >= 2 && request.resource.data.college.size() <= 120
+        && request.resource.data.studentId is string && request.resource.data.studentId.size() <= 40
+        && request.resource.data.createdAt == request.time;
+      allow update, delete: if false;                 // profiles are immutable from the client
+    }
+    match /{document=**} { allow read, write: if false; }
+  }
+}
